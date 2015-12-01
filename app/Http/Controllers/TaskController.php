@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 
 class TaskController extends Controller
 {
@@ -19,7 +20,14 @@ class TaskController extends Controller
     {
         // forma de no fer API correctament
         // 1. No es retorna paginació
-        return Task::all();
+
+        $tasks = task::all();
+
+        return Response::json([
+
+            'data' => $tasks->toArray()
+
+        ],200);
     }
 
     /**
@@ -54,6 +62,17 @@ class TaskController extends Controller
      */
     public function show($id)
     {
+        $tasks = task::find($id);
+
+        if ( ! $tasks)
+        {
+            return Response::json([
+                'error' => [
+                    'message' => 'Task does not exist',
+                    'code' => 195
+                ]
+            ],404);
+        }
         return Task::findOrFail($id);
         //
     }
