@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Task;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Response;
 
-class TaskController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,16 +16,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        // forma de no fer API correctament
-        // 1. No es retorna paginació
-
-        $tasks = task::all();
-
-        return Response::json([
-
-            'data' => $this->transform($tasks)
-
-        ],200);
+        //
     }
 
     /**
@@ -49,9 +38,6 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         //
-        $task = new Task();
-
-        $this->saveTask($request, $task);
     }
 
     /**
@@ -62,20 +48,6 @@ class TaskController extends Controller
      */
     public function show($id)
     {
-        $tasks = task::find($id);
-
-        if ( ! $tasks)
-        {
-            return Response::json([
-                'error' => [
-                    'message' => 'Task does not exist',
-                    'code' => 195
-                ]
-            ],404);
-        }
-        return Response::json([
-            'data' => $tasks->toArray()
-        ],200);
         //
     }
 
@@ -100,8 +72,6 @@ class TaskController extends Controller
     public function update(Request $request, $id)
     {
         //
-            $task = Task::findOrFail($id);
-            $this->saveTask($request, $task);
     }
 
     /**
@@ -113,32 +83,5 @@ class TaskController extends Controller
     public function destroy($id)
     {
         //
-        Task::destroy($id);
-    }
-
-    /**
-     * @param Request $request
-     * @param $task
-     */
-    protected function saveTask(Request $request, $task)
-    {
-        $task->name = $request->name;
-        $task->priority = $request->priority;
-        $task->done = $request->done;
-
-        $task->save();
-    }
-
-    private function transform($tasks)
-    {
-        return array_map(function($tasks)
-        {
-            return [
-            'title' => $tasks['name'],
-            'body' => $tasks['priority'],
-            'active' => $tasks['done']
-        ];
-
-        }, $tasks->toArray());
     }
 }
