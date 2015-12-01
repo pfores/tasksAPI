@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Response;
 
 class TaskController extends Controller
 {
@@ -73,7 +73,9 @@ class TaskController extends Controller
                 ]
             ],404);
         }
-        return Task::findOrFail($id);
+        return Response::json([
+            'data' => $tasks->toArray()
+        ],200);
         //
     }
 
@@ -98,9 +100,8 @@ class TaskController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $task = Task::findOrFail($id);
-
-        $this->saveTask($request, $task);
+            $task = Task::findOrFail($id);
+            $this->saveTask($request, $task);
     }
 
     /**
